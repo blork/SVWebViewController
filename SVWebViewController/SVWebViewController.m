@@ -7,6 +7,8 @@
 //  https://github.com/samvermette/SVWebViewController
 
 #import "SVWebViewController.h"
+#import "TUSafariActivity.h"
+#import "ARChromeActivity.h"
 
 @interface SVWebViewController () <UIWebViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate, UISplitViewControllerDelegate>
 
@@ -329,7 +331,11 @@
     
     UIActivityViewController* activityViewController =
     [[UIActivityViewController alloc] initWithActivityItems:dataToShare
-                                      applicationActivities:nil];
+                                      applicationActivities:@[
+                                        [[ARChromeActivity alloc] init],
+                                        [[TUSafariActivity alloc] init]
+        ]
+     ];
 
 
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
