@@ -19,7 +19,7 @@
 
 @property (nonatomic, strong) UIActivityIndicatorView *indicator;
 
-@property (nonatomic, strong, readonly) UIActionSheet *pageActionSheet;
+@property (nonatomic, strong, readonly) UIPopoverController *popoverController;
 
 @property (nonatomic, strong) UIWebView *mainWebView;
 @property (nonatomic, strong) NSURL *URL;
@@ -44,7 +44,7 @@
 @synthesize availableActions;
 
 @synthesize URL, mainWebView;
-@synthesize backBarButtonItem, forwardBarButtonItem, refreshBarButtonItem, stopBarButtonItem, actionBarButtonItem, mobiliserBarButtonItem, pageActionSheet;
+@synthesize backBarButtonItem, forwardBarButtonItem, refreshBarButtonItem, stopBarButtonItem, actionBarButtonItem, mobiliserBarButtonItem, popoverController;
 
 #pragma mark - setters and getters
 
@@ -106,31 +106,6 @@
     return mobiliserBarButtonItem;
 }
 
-- (UIActionSheet *)pageActionSheet {
-    
-    if(!pageActionSheet) {
-        pageActionSheet = [[UIActionSheet alloc]
-                           initWithTitle:self.mainWebView.request.URL.absoluteString
-                           delegate:self
-                           cancelButtonTitle:nil
-                           destructiveButtonTitle:nil
-                           otherButtonTitles:nil];
-        
-        if((self.availableActions & SVWebViewControllerAvailableActionsCopyLink) == SVWebViewControllerAvailableActionsCopyLink)
-            [pageActionSheet addButtonWithTitle:NSLocalizedString(@"Copy Link", @"")];
-        
-        if((self.availableActions & SVWebViewControllerAvailableActionsOpenInSafari) == SVWebViewControllerAvailableActionsOpenInSafari)
-            [pageActionSheet addButtonWithTitle:NSLocalizedString(@"Open in Safari", @"")];
-        
-        if([MFMailComposeViewController canSendMail] && (self.availableActions & SVWebViewControllerAvailableActionsMailLink) == SVWebViewControllerAvailableActionsMailLink)
-            [pageActionSheet addButtonWithTitle:NSLocalizedString(@"Mail Link to this Page", @"")];
-        
-        [pageActionSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
-        pageActionSheet.cancelButtonIndex = [self.pageActionSheet numberOfButtons]-1;
-    }
-    
-    return pageActionSheet;
-}
 
 #pragma mark - Initialization
 
@@ -212,7 +187,7 @@
     refreshBarButtonItem = nil;
     stopBarButtonItem = nil;
     actionBarButtonItem = nil;
-    pageActionSheet = nil;
+    popoverController = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -350,13 +325,26 @@
 
 - (void)actionButtonClicked:(id)sender {
     
-    if(pageActionSheet)
-        return;
-	
+    NSArray* dataToShare = @[self.navigationItem.title, self.URL];  // ...or whatever pieces of data you want to share.
+    
+    UIActivityViewController* activityViewController =
+    [[UIActivityViewController alloc] initWithActivityItems:dataToShare
+                                      applicationActivities:nil];
+
+
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-        [self.pageActionSheet showFromBarButtonItem:self.actionBarButtonItem animated:YES];
+    {
+        if (self.popoverController) {
+            [self.popoverController dismissPopoverAnimated:YES];
+        } else {
+            popoverController = [[UIPopoverController alloc] initWithContentViewController:activityViewController];
+        }
+        [self.popoverController presentPopoverFromBarButtonItem:self.actionBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
+    }
     else
-        [self.pageActionSheet showFromToolbar:self.navigationController.toolbar];
+    {
+        [self presentViewController:activityViewController animated:YES completion:nil];
+    }
     
 }
 
@@ -406,7 +394,7 @@
 #endif
 	}
     
-    pageActionSheet = nil;
+    popoverController = nil;
 }
 
 #pragma mark -
@@ -424,11 +412,11 @@
 #endif
 }
 
-- (void)splitViewController:(UISplitViewController *)splitController willHideViewController:(UIViewController *)viewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)popoverController
+- (void)splitViewController:(UISplitViewController *)splitController willHideViewController:(UIViewController *)viewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)popover
 {
     barButtonItem.title = NSLocalizedString(@"Bookmarks", nil);
     [self.navigationItem setLeftBarButtonItem:barButtonItem animated:YES];
-    self.masterPopoverController = popoverController;
+    self.masterPopoverController = popover;
 }
 
 - (void)splitViewController:(UISplitViewController *)splitController willShowViewController:(UIViewController *)viewController invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
