@@ -199,6 +199,7 @@
 	
     self.indicator.center = self.mainWebView.center;
     
+    [self.navigationController setNavigationBarHidden:NO animated:animated];
     [self.navigationController setToolbarHidden:NO animated:animated];
 }
 
