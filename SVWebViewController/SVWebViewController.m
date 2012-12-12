@@ -166,6 +166,8 @@
     [self loadURL:self.URL];
     
     self.view = mainWebView;
+    
+    [self.navigationController.view setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
 }
 
 - (void)viewDidLoad {
