@@ -98,11 +98,8 @@
 - (UIBarButtonItem *)mobiliserBarButtonItem {
     
     if (!mobiliserBarButtonItem) {
-        UISwitch *mobileSwitch = [[UISwitch alloc] init];
-        mobileSwitch.tintColor = self.navigationController.toolbar.tintColor;
-        mobileSwitch.onTintColor = self.navigationController.toolbar.tintColor;
-        [mobileSwitch addTarget:self action:@selector(mobiliserButtonClicked:) forControlEvents:UIControlEventValueChanged];
-        mobiliserBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:mobileSwitch];
+        mobiliserBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"web" style:UIBarButtonItemStylePlain target:self action:@selector(mobiliserButtonClicked:)];
+        [mobiliserBarButtonItem setTitleTextAttributes:@{UITextAttributeFont: [UIFont systemFontOfSize:14]} forState:UIControlStateNormal];
     }
     
     return mobiliserBarButtonItem;
@@ -138,7 +135,6 @@
 
 -(void) loadURL:(NSURL*) url
 {
-    
     [mainWebView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"about:blank"]]];
     self.URL = url;
     NSURL *pageUrl = url;
@@ -242,7 +238,15 @@
     self.refreshBarButtonItem.enabled = !self.URL.isFileURL;
     
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [(UISwitch*)self.mobiliserBarButtonItem.customView setOn:[userDefaults boolForKey:@"mobiliserEnabled"]];
+    
+    if ([userDefaults boolForKey:@"mobiliserEnabled"])
+    {
+        self.mobiliserBarButtonItem.title = @"web";
+    }
+    else
+    {
+        self.mobiliserBarButtonItem.title = @"reader";
+    }
     
     UIBarButtonItem *refreshStopBarButtonItem = self.mainWebView.isLoading ? self.stopBarButtonItem : self.refreshBarButtonItem;
     
@@ -362,7 +366,17 @@
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     [userDefaults setBool:![userDefaults boolForKey:@"mobiliserEnabled"] forKey:@"mobiliserEnabled"];
     [userDefaults synchronize];
-    [self loadURL:self.URL];
+    
+    [mainWebView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"about:blank"]]];
+
+    [UIView transitionWithView:self.mainWebView
+                      duration:1
+                       options:UIViewAnimationOptionTransitionFlipFromLeft
+                    animations:^{
+                        [self loadURL:self.URL];
+                    }
+                    completion:^(BOOL finished) {
+                    }];
 }
 
 - (void)doneButtonClicked:(id)sender {
