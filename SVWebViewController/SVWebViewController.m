@@ -10,6 +10,7 @@
 #import "TUSafariActivity.h"
 #import "ARChromeActivity.h"
 #import "ZYInstapaperActivity.h"
+#import "ReadabilityActivity.h"
 
 @interface SVWebViewController () <UIWebViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate, UISplitViewControllerDelegate>
 
@@ -343,7 +344,8 @@
                                       applicationActivities:@[
                                         [ZYInstapaperActivity instance],
                                         [[ARChromeActivity alloc] init],
-                                        [[TUSafariActivity alloc] init]
+                                        [[TUSafariActivity alloc] init],
+                                        [[ReadabilityActivity alloc] init]
         ]
      ];
 
