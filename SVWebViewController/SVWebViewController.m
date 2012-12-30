@@ -9,6 +9,7 @@
 #import "SVWebViewController.h"
 #import "TUSafariActivity.h"
 #import "ARChromeActivity.h"
+#import "ZYInstapaperActivity.h"
 
 @interface SVWebViewController () <UIWebViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate, UISplitViewControllerDelegate>
 
@@ -339,6 +340,7 @@
     UIActivityViewController* activityViewController =
     [[UIActivityViewController alloc] initWithActivityItems:dataToShare
                                       applicationActivities:@[
+                                        [ZYInstapaperActivity instance],
                                         [[ARChromeActivity alloc] init],
                                         [[TUSafariActivity alloc] init]
         ]
