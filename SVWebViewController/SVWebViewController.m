@@ -367,16 +367,7 @@
     [userDefaults setBool:![userDefaults boolForKey:@"mobiliserEnabled"] forKey:@"mobiliserEnabled"];
     [userDefaults synchronize];
     
-    [mainWebView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"about:blank"]]];
-
-    [UIView transitionWithView:self.mainWebView
-                      duration:1
-                       options:UIViewAnimationOptionTransitionFlipFromLeft
-                    animations:^{
-                        [self loadURL:self.URL];
-                    }
-                    completion:^(BOOL finished) {
-                    }];
+    [self loadURL:self.URL];
 }
 
 - (void)doneButtonClicked:(id)sender {
