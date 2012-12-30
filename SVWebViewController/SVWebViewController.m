@@ -100,6 +100,7 @@
     
     if (!mobiliserBarButtonItem) {
         mobiliserBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"web" style:UIBarButtonItemStylePlain target:self action:@selector(mobiliserButtonClicked:)];
+        mobiliserBarButtonItem.width = 50;
         [mobiliserBarButtonItem setTitleTextAttributes:@{UITextAttributeFont: [UIFont systemFontOfSize:14]} forState:UIControlStateNormal];
     }
     
@@ -234,7 +235,7 @@
 - (void)updateToolbarItems {
     self.backBarButtonItem.enabled = self.mainWebView.canGoBack && !self.URL.isFileURL;
     self.forwardBarButtonItem.enabled = self.mainWebView.canGoForward && !self.URL.isFileURL;
-    self.actionBarButtonItem.enabled = !self.mainWebView.isLoading && !self.URL.isFileURL;
+    self.actionBarButtonItem.enabled = !self.URL.isFileURL;
     self.mobiliserBarButtonItem.enabled = YES && !self.URL.isFileURL;
     self.refreshBarButtonItem.enabled = !self.URL.isFileURL;
     
