@@ -11,6 +11,7 @@
 #import "ARChromeActivity.h"
 #import "ZYInstapaperActivity.h"
 #import "ReadabilityActivity.h"
+#import "UIViewController+FancyAnimation.h"
 
 @interface SVWebViewController () <UIWebViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate, UISplitViewControllerDelegate>
 
@@ -194,6 +195,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [self resetFancy];
     NSAssert(self.navigationController, @"SVWebViewController needs to be contained in a UINavigationController. If you are presenting SVWebViewController modally, use SVModalWebViewController instead.");
     
 	[super viewWillAppear:animated];
