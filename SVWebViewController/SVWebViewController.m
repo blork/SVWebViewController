@@ -435,8 +435,11 @@
 
 - (void)splitViewController:(UISplitViewController *)splitController willHideViewController:(UIViewController *)viewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)popover
 {
-    barButtonItem.title = NSLocalizedString(@"Bookmarks", nil);
-    [self.navigationItem setLeftBarButtonItem:barButtonItem animated:YES];
+    UIButton *bookmarkButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+    [bookmarkButton setImage:[UIImage imageNamed:@"58-bookmark"]  forState:UIControlStateNormal];
+    [bookmarkButton addTarget:barButtonItem.target action:barButtonItem.action forControlEvents:UIControlEventTouchUpInside];
+
+    [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithCustomView:bookmarkButton] animated:YES];
     self.masterPopoverController = popover;
 }
 
