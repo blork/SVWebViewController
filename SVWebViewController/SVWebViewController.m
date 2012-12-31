@@ -10,6 +10,7 @@
 #import "TUSafariActivity.h"
 #import "ARChromeActivity.h"
 #import "ZYInstapaperActivity.h"
+#import "ZYInstapaperActivityItem.h"
 #import "ReadabilityActivity.h"
 #import "UIViewController+FancyAnimation.h"
 
@@ -121,9 +122,14 @@
     if(self = [super init]) {
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
             UIButton *backButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
-            [backButton setImage:[UIImage imageNamed:@"BackButton"]  forState:UIControlStateNormal];
+            [backButton setImage:[UIImage imageNamed:@"09-arrow-west"]  forState:UIControlStateNormal];
             [backButton addTarget:self action:@selector(pop) forControlEvents:UIControlEventTouchUpInside];
             self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+            
+            self.indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+            self.indicator.hidesWhenStopped = YES;
+            [self.indicator stopAnimating];
+            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.indicator];
         }
         self.URL = pageURL;
         self.availableActions = SVWebViewControllerAvailableActionsOpenInSafari | SVWebViewControllerAvailableActionsMailLink;
@@ -172,14 +178,6 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-    
-    self.indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-    self.indicator.hidesWhenStopped = YES;
-    [self.indicator stopAnimating];
-    
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.indicator];
-    
-    
     [self updateToolbarItems];
 }
 
@@ -199,9 +197,7 @@
     NSAssert(self.navigationController, @"SVWebViewController needs to be contained in a UINavigationController. If you are presenting SVWebViewController modally, use SVModalWebViewController instead.");
     
 	[super viewWillAppear:animated];
-	
-    self.indicator.center = self.mainWebView.center;
-    
+	   
     [self.navigationController setNavigationBarHidden:NO animated:animated];
     [self.navigationController setToolbarHidden:NO animated:animated];
 }
@@ -341,13 +337,17 @@
     
     NSArray* dataToShare = @[self.navigationItem.title, self.URL];  // ...or whatever pieces of data you want to share.
     
+    ZYInstapaperActivityItem *instapaperItem = [[ZYInstapaperActivityItem alloc] initWithURL:self.URL];
+    instapaperItem.title = self.navigationItem.title;
+    
     UIActivityViewController* activityViewController =
     [[UIActivityViewController alloc] initWithActivityItems:dataToShare
                                       applicationActivities:@[
                                         [ZYInstapaperActivity instance],
                                         [[ARChromeActivity alloc] init],
                                         [[TUSafariActivity alloc] init],
-                                        [[ReadabilityActivity alloc] init]
+                                        [[ReadabilityActivity alloc] init],
+                                        instapaperItem
         ]
      ];
 
