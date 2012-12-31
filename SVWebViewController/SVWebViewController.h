@@ -16,6 +16,7 @@
 - (id)initWithURL:(NSURL*)URL;
 - (void)loadURL:(NSURL*)URL;
 - (void)loadAddress:(NSString*)address;
+- (void)showMasterPopover;
 
 @property (nonatomic, readwrite) SVWebViewControllerAvailableActions availableActions;
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;

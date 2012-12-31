@@ -450,5 +450,14 @@
     self.masterPopoverController = nil;
 }
 
+-(void)showMasterPopover
+{
+    if (self.masterPopoverController && !self.masterPopoverController.isPopoverVisible)
+    {
+        UIButton *button = (UIButton*)self.navigationItem.leftBarButtonItem.customView;
+        [button sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }
+}
+
 
 @end
