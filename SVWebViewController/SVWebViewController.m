@@ -10,7 +10,6 @@
 #import "TUSafariActivity.h"
 #import "ARChromeActivity.h"
 #import "ZYInstapaperActivity.h"
-#import "ZYInstapaperActivityItem.h"
 #import "ReadabilityActivity.h"
 #import "UIViewController+FancyAnimation.h"
 
@@ -337,9 +336,6 @@
     
     NSArray* dataToShare = @[self.navigationItem.title, self.URL];  // ...or whatever pieces of data you want to share.
     
-    ZYInstapaperActivityItem *instapaperItem = [[ZYInstapaperActivityItem alloc] initWithURL:self.URL];
-    instapaperItem.title = self.navigationItem.title;
-    
     UIActivityViewController* activityViewController =
     [[UIActivityViewController alloc] initWithActivityItems:dataToShare
                                       applicationActivities:@[
@@ -347,7 +343,7 @@
                                         [[ARChromeActivity alloc] init],
                                         [[TUSafariActivity alloc] init],
                                         [[ReadabilityActivity alloc] init],
-                                        instapaperItem
+                                        [ZYInstapaperActivity instance]
         ]
      ];
 
