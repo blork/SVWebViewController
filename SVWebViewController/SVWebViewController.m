@@ -149,7 +149,7 @@
     NSURL *pageUrl = url;
     
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    if ([userDefaults boolForKey:@"mobiliserEnabled"]) {
+    if ([userDefaults boolForKey:@"mobiliserEnabled"] && ![self.URL isFileURL]) {
         NSString *mobilisedUrlString = [NSString stringWithFormat:@"http://viewtext.org/api/text?url=%@&format=html", [pageUrl absoluteString]];
         pageUrl = [NSURL URLWithString:mobilisedUrlString];
     }
